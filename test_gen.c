@@ -60,9 +60,26 @@ void fuzzer()
                 time_t end = time(NULL);
 
                 printf("Elapsed time: %.0f seconds\n", difftime(end, start));
+
+                // Write summary to log
+                FILE *f = fopen("log.txt", "w");
+                fprintf(f, "Crash detected! Signal: %d\n", sig);
+                fprintf(f, "Crashing input (length %d):\n", i);
+                for (int k = 0; k < i; k++)
+                {
+                    fprintf(f, "\\x%02X", (unsigned char)input[k]);
+                }
+                fprintf(f, "\n");
+                fprintf(f, "Number of tests before crash: %d\n", iterations);
+                fprintf(f, "Elapsed time: %.0f seconds\n", difftime(end, start));
+                fclose(f);
                 return; // STOP FUZZER
             }
         }
     }
+    // Write to console and log that testing was unsuccessful
+    FILE *f = fopen("log.txt", "w");
     printf("Crashing input not found.\n");
+    fprintf(f, "Crashing input not found.\n");
+    fclose(f);
 }
