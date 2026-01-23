@@ -7,6 +7,7 @@ void fuzzer()
 {
     // Initialize randomizer with current time as seed
     srand(time(NULL));
+    time_t start = time(NULL);
 
     // Run for lengths 1 - 64
     int iterations = 0;
@@ -33,7 +34,7 @@ void fuzzer()
             }
             input[i] = '\0';
             iterations++;
-            if (iterations % 1000 == 0)
+            if (iterations % 10000 == 0)
             {
                 printf("%d/%d\n", iterations, total_tests);
                 fflush(stdout);
@@ -41,7 +42,7 @@ void fuzzer()
 
             // Safe buffer writing
             char command[256];
-            snprintf(command, sizeof(command), "./target '%s'", input);
+            snprintf(command, sizeof(command), "./test '%s'", input);
 
             // Test the file and stop at crash
             int status = system(command);
@@ -55,6 +56,10 @@ void fuzzer()
                     printf("\\x%02X", (unsigned char)input[k]);
                 }
                 printf("\n");
+                printf("Number of tests before crash: %d\n", iterations);
+                time_t end = time(NULL);
+
+                printf("Elapsed time: %.0f seconds\n", difftime(end, start));
                 return; // STOP FUZZER
             }
         }
