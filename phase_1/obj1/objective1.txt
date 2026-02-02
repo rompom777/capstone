@@ -1,0 +1,9 @@
+Crash-inducing test case: \x50\x61\x53
+Number of test cases: 3,503,174
+Wall clock time: 5302 seconds
+Pre question 1: Make the test case generation completely random. It's not efficient by any means, but works given enough time.
+Pre question 2: It doesn't matter if the fuzzer generates duplicates, it will only affect the time required to find the crashing input. Our first version of the fuzzer generates a random input from length 1 - 128. The odds are 1 in 256^(length) so not very likely.
+Pre question 3: For the first verison of our fuzzer, we utilize the system() command to call shell command through our code. We run ./target and feed it the random input generated.
+Post question 1: The main weakness is that the generator is not learning anything from each iteration making it completely random. It's highly inefficient and takes a very long time to find the crashing input.
+Post question 2: We could base future input generation on code coverage. Make sure that the input touch new parts of the code.
+Post question 3: We would implement the code coverage-based approach. We would also perform a grammar analysis to make sure the generator is not wasting type with completely random inputs.
