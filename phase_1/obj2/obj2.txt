@@ -1,0 +1,9 @@
+Crash-inducing test case: \x50\x61\x53
+Average number of test cases: 9,834,406.67
+Std. Dev. number of test cases: 4,811,498.41
+Average wall clock time: 14,965 seconds
+Std. Dev. wall clock time: 7,304.12 seconds
+Pre question 1: High variation, the length and content of each character is completely random so the program could get lucky and find the solution quickly or not find it at all.
+Post question 1: We saw a lot of variation for the reasons stated in the pre question.
+Post question 2: The impact is inaccurate estimates because there aren't enough trials to figure out the average run time of the fuzzer.
+Post question 3: We would use statistical analysis to determine when we've conducted enough trials to provide a pretty accurate estimate for average run time.
