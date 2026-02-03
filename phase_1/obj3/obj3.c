@@ -1,9 +1,10 @@
-#include "test_gen.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/wait.h>
+#include <time.h>
+#include <string.h>
 
-void fuzzer()
+int main()
 {
     // Open log file
     FILE *f = fopen("log.txt", "w");
@@ -12,37 +13,44 @@ void fuzzer()
     srand(time(NULL));
     time_t start = time(NULL);
 
-    // Run for lengths 1 - 128
+    // Run for length 3
     int iterations = 0;
-    const int MAX_LENGTH = 128;
-    const int ITERATIONS_PER_LENGTH = 1000000;
-    int total_tests = MAX_LENGTH * ITERATIONS_PER_LENGTH;
+    const int INPUT_LENGTH = 3;
+    const int ITERATIONS = 1000000;
 
-    // Randomized length testing instead of in-order progression
-    for (int i = 0; i < total_tests; i++)
+    // 3 character string input
+    char input[INPUT_LENGTH + 1];
+
+    // Repeat "ITERATIONS" number of times
+    for (int i = 0; i < ITERATIONS; i++)
     {
-        int curr_size = 1 + (rand() % MAX_LENGTH);
-        // Current test case to input
-        char input[curr_size + 1];
-
         // Construct the input byte-by-byte
-        for (int k = 0; k < curr_size; k++)
+        for (int k = 0; k < INPUT_LENGTH; k++)
         {
-            unsigned char b = (unsigned char)(rand() % 256);
-            while (b == 0x00 || b == 0x27)
+            unsigned char b;
+            unsigned int index = (rand() % 62);
+            if (index < 10)
             {
-                b = (unsigned char)(rand() % 256);
+                b = (unsigned char)(index + 48);
+            }
+            else if (index < 36)
+            {
+                b = (unsigned char)(index + 65);
+            }
+            else
+            {
+                b = (unsigned char)(index + 97);
             }
             input[k] = b;
         }
-        input[curr_size] = '\0';
+        input[INPUT_LENGTH] = '\0';
 
         iterations++;
-        // Print to console every 10k iterations
-        if (iterations % 10000 == 0)
+        // Print to console every 1k iterations
+        if (iterations % 1000 == 0)
         {
-            printf("%d/%d\n", iterations, total_tests);
-            fprintf(f, "%d/%d\n", iterations, total_tests);
+            printf("%d/%d\n", iterations, ITERATIONS);
+            fprintf(f, "%d/%d\n", iterations, ITERATIONS);
             fflush(stdout);
             fflush(f);
         }
@@ -57,8 +65,8 @@ void fuzzer()
         {
             int sig = WTERMSIG(status);
             printf("Crash detected! Signal: %d\n", sig);
-            printf("Crashing input (length %d):\n", curr_size);
-            for (int k = 0; k < curr_size; k++)
+            printf("Crashing input (length %d):\n", INPUT_LENGTH);
+            for (int k = 0; k < INPUT_LENGTH; k++)
             {
                 printf("\\x%02X", (unsigned char)input[k]);
             }
@@ -71,8 +79,8 @@ void fuzzer()
             // Write summary to log
             // FILE *f = fopen("log.txt", "w");
             fprintf(f, "Crash detected! Signal: %d\n", sig);
-            fprintf(f, "Crashing input (length %d):\n", curr_size);
-            for (int k = 0; k < curr_size; k++)
+            fprintf(f, "Crashing input (length %d):\n", INPUT_LENGTH);
+            for (int k = 0; k < INPUT_LENGTH; k++)
             {
                 fprintf(f, "\\x%02X", (unsigned char)input[k]);
             }
@@ -80,10 +88,13 @@ void fuzzer()
             fprintf(f, "Number of tests before crash: %d\n", iterations);
             fprintf(f, "Elapsed time: %.0f seconds\n", difftime(end, start));
             fclose(f);
-            return; // STOP FUZZER
+            return 0; // STOP FUZZER
         }
     }
+
     printf("Crashing input not found.\n");
     fprintf(f, "Crashing input not found.\n");
     fclose(f);
+
+    return 0;
 }
