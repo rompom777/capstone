@@ -1,12 +1,12 @@
 Crash-inducing test case: \x50\x61\x53
 Average number of test cases: 13,353.40
-Average number of test cases relative to Objective 2: 
+Average number of test cases relative to Objective 2: 0.0014 times
 Std. Dev. In number of test cases: 93,840.29
-Std. dev. in number of test cases relative to Objective 2: 
+Std. dev. in number of test cases relative to Objective 2: 0.0195 times
 Average wall clock time: 212.60 seconds
-Average wall clock time relative to Objective 2: 
+Average wall clock time relative to Objective 2: 0.0142 times
 Std. Dev. in wall clock time: 143.25 seconds
-Std. Dev. in wall clock time relative to Objective 2: 
+Std. Dev. in wall clock time relative to Objective 2: 0.0196 times
 Pre question 1: The number of test cases need will drastically be reduced since we've narrowed down our constraints from length 128 and 256 options per byte to just length 3 and 62 options per byte.
 Pre question 2: Since number of test cases will be reduced drastically, so will the wall clock time.
 Post question 1: The results show it takes many less test cases and much less time than in obj2. This is because we've narrowed down the possible input lengths/values.
