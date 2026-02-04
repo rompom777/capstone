@@ -1,0 +1,5 @@
+Crash detected! Signal: 4
+Crashing input (length 3):
+\x71\x61\x4D
+Number of tests before crash: 906
+Elapsed time: 3 seconds

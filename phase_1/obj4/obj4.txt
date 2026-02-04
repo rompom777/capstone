@@ -1,0 +1,19 @@
+Crash-inducing test case: \x71\x61\x4D
+Average number of test cases: 1,032.90
+Average number of test cases relative to Objective 3: 0.027260 times
+Std. Dev. In number of test cases: 456.32
+Std. dev. in number of test cases relative to Objective 3: 0.024921 times
+Average wall clock time: 3.5
+Average wall clock time relative to Objective 3: 0.059322 times
+Std. Dev. in wall clock time: 1.35
+Std. Dev. in wall clock time relative to Objective 3: 0.047940 times
+Pre question 1: Some viable mutation stratigies are swapping bytes in the input from the seedpool or possibly incrementing bytes by a set amount.
+Pre question 2: Mutating a lot of a seed can allow you to explore further uncovered code regions faster however it acts more like a black-box fuzzer
+ in that case which results in a larger number of iterations. Mutating a little of a seed allows you to explore further into intresting seeds, however
+ it could result in the fuzzer becoming to tunnel focused down a path.
+Pre question 3: The possible ways of collecting code coverage are basic block coverage, edge coverage and path coverage.
+Pre question 4: I expect there to a great reduction in the number of test cases and run time due to this approach bieng more focused and using 
+ codecoverage as a metric to select inputs as opposed to it bieng almost completely random like in the black box fuzzer.
+Post question 1: The obj4 fuzzer requires drastically less iterations and elapses drastically less time compared to obj3. This makes sense since the
+ fuzzer is using feedback from code coverage to select the next input and thus requiring way less iterations compared to a black box fuzzer.
+Post question 2: We could implement a dictionary of program specific symbols for mutation.
