@@ -160,12 +160,26 @@ int main()
             fflush(f);
         }
 
-        // Safe buffer writing
-        char command[256];
-        snprintf(command, sizeof(command), "./target '%s'", input);
+        pid_t pid = fork();
+        
+        if (pid == -1)
+        {
+            perror("fork failed");
+            continue;
+        }
+        
+        if (pid == 0)
+        {
+            char *args[] = {"./target", input, NULL};
+            execve("./target", args, NULL);
+            
+            perror("execve failed");
+            _exit(1);
+        }
 
-        // Test the file and stop at crash
-        int status = system(command);
+        int status;
+        waitpid(pid, &status, 0);
+
         if (WIFSIGNALED(status) || WEXITSTATUS(status) >= 128)
         {
             int sig = WTERMSIG(status);
