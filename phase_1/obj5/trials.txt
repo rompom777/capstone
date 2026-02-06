@@ -1,0 +1,75 @@
+trial 1:
+Iterations: 1000 Seeds: 3
+Crash detected! Signal: 4
+Crashing input (length 3):
+\x71\x61\x4D
+Number of tests before crash: 1426
+Elapsed time: 5 seconds
+
+trial 2:
+Crash detected! Signal: 4
+Crashing input (length 3):
+\x71\x61\x4D
+Number of tests before crash: 721
+Elapsed time: 3 seconds
+
+trial 3:
+Crash detected! Signal: 4
+Crashing input (length 3):
+\x71\x61\x4D
+Number of tests before crash: 331
+Elapsed time: 1 seconds
+
+trial 4:
+Iterations: 1000 Seeds: 3
+Crash detected! Signal: 4
+Crashing input (length 3):
+\x71\x61\x4D
+Number of tests before crash: 1035
+Elapsed time: 4 seconds
+
+trial 5:
+Crash detected! Signal: 4
+Crashing input (length 3):
+\x71\x61\x4D
+Number of tests before crash: 457
+Elapsed time: 1 seconds
+
+trial 6:
+Crash detected! Signal: 4
+Crashing input (length 3):
+\x71\x61\x4D
+Number of tests before crash: 637
+Elapsed time: 2 seconds
+
+trial 7:
+Iterations: 1000 Seeds: 3
+Crash detected! Signal: 4
+Crashing input (length 3):
+\x71\x61\x4D
+Number of tests before crash: 1164
+Elapsed time: 4 seconds
+
+trial 8:
+Iterations: 1000 Seeds: 2
+Iterations: 2000 Seeds: 2
+Crash detected! Signal: 4
+Crashing input (length 3):
+\x71\x61\x4D
+Number of tests before crash: 2915
+Elapsed time: 9 seconds
+
+trial 9:
+Crash detected! Signal: 4
+Crashing input (length 3):
+\x71\x61\x4D
+Number of tests before crash: 693
+Elapsed time: 2 seconds
+
+trial 10:
+Iterations: 1000 Seeds: 3
+Crash detected! Signal: 4
+Crashing input (length 3):
+\x71\x61\x4D
+Number of tests before crash: 1181
+Elapsed time: 4 seconds
