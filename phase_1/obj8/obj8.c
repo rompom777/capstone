@@ -104,7 +104,7 @@ uint8_t *read_coverage_file_inplace(const char *filename, uint8_t *buffer, size_
     return buffer;  // Success
 }
 
-bool update_coverage()
+bool update_coverage(int *hit_count)
 {
     //buffer for edge counters for new run
     static uint8_t temp_buffer[COVERAGE_SIZE];  
@@ -131,13 +131,17 @@ bool update_coverage()
     
     // update edge counters to max count for each edge
     bool coverage_flag = false;
+    int edges_hit = 0;
     for (size_t i = 0; i < edge_size; i++) {
         if (new_edge_counters[i] > edge_counters[i]) {
             edge_counters[i] = new_edge_counters[i];
             coverage_flag = true;
         }
+        if (new_edge_counters[i] > 0) {
+            edges_hit++;
+        }
     }
-    
+    *hit_count = edges_hit;
     return coverage_flag;
 }
 
@@ -214,7 +218,8 @@ void load_seeds() {
                     
                     if (bytes_read == fsize) {
                         run_target(buffer, bytes_read, TARGET_NAME); 
-                        if (update_coverage()) {
+                        int hit_count;
+                        if (update_coverage(&hit_count)) {
                             if (num_seeds < MAX_SEEDS) {
                                 memcpy(seed_pool[num_seeds].seed_buffer, buffer, bytes_read);
                                 seed_pool[num_seeds].size = bytes_read;
@@ -248,6 +253,8 @@ int main()
     // 3 character string input
     uint8_t input[INPUT_LENGTH + 1];
     size_t input_size;
+    size_t interesting_cases = 0;
+    float avg_edges_covered = 0;
 
     while (true)
     {
@@ -265,8 +272,13 @@ int main()
         // Print to console every 1k iterations
         if (iterations % 1000 == 0)
         {
-            printf("Iterations: %d Seeds: %d\n", iterations, num_seeds);
-            fprintf(f, "Iterations: %d Seeds: %d\n", iterations, num_seeds);
+            int total_cov = 0;
+            for(size_t i = 0; i < edge_size; i++) {
+                total_cov += (int)(edge_counters[i]);
+            }
+            printf("Iterations: %d Seeds: %d interesting: %zu, cov %d\n", iterations, num_seeds, interesting_cases, total_cov);
+            fprintf(f, "Iterations: %d Seeds: %d\n interesting: %zu, cov: %d\n", iterations, num_seeds, interesting_cases, total_cov);
+            fprintf(f, "Average edges covered: %f / %zu\n", avg_edges_covered, edge_size);
             fflush(stdout);
             fflush(f);
         }
@@ -298,7 +310,8 @@ int main()
             return 0; // STOP FUZZER
         }
 
-        if (update_coverage())
+        int edges_covered = 0;
+        if (update_coverage(&edges_covered))
         {
             
             if (num_seeds < MAX_SEEDS)
@@ -306,10 +319,11 @@ int main()
                 memcpy(seed_pool[num_seeds].seed_buffer, input, input_size);
                 seed_pool[num_seeds].size = input_size;
                 num_seeds++;
-
-                save_to_intresting(input, num_seeds, input_size);
             }
+            interesting_cases++;
+            save_to_intresting(input, num_seeds, input_size);
         }
+        avg_edges_covered = avg_edges_covered + (((float)edges_covered - avg_edges_covered) / (float)iterations);
     }
 
     printf("Crashing input not found.\n");
