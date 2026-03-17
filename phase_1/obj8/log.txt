@@ -1,84 +1,105 @@
-Iterations: 1000 Seeds: 442
- interesting: 351, cov: 319487
-Average edges covered: 1601.367920 / 28072
-Iterations: 2000 Seeds: 661
- interesting: 570, cov: 329539
-Average edges covered: 1591.855713 / 28072
-Iterations: 3000 Seeds: 831
- interesting: 740, cov: 335265
-Average edges covered: 1599.759155 / 28072
-Iterations: 4000 Seeds: 966
- interesting: 875, cov: 342105
-Average edges covered: 1610.769165 / 28072
+Iterations: 1000 Seeds: 443
+ interesting: 352, cov: 316083, Unique Edges: 4134
+Average edges covered: 1660.059570 / 28072
+Iterations: 2000 Seeds: 643
+ interesting: 552, cov: 329728, Unique Edges: 4237
+Average edges covered: 1673.390503 / 28072
+Iterations: 3000 Seeds: 812
+ interesting: 721, cov: 338300, Unique Edges: 4314
+Average edges covered: 1670.578369 / 28072
+Iterations: 4000 Seeds: 960
+ interesting: 869, cov: 342821, Unique Edges: 4354
+Average edges covered: 1680.698120 / 28072
 Iterations: 5000 Seeds: 1000
- interesting: 988, cov: 346781
-Average edges covered: 1619.977661 / 28072
+ interesting: 994, cov: 347442, Unique Edges: 4382
+Average edges covered: 1684.448120 / 28072
 Iterations: 6000 Seeds: 1000
- interesting: 1088, cov: 349335
-Average edges covered: 1623.295532 / 28072
+ interesting: 1114, cov: 352637, Unique Edges: 4406
+Average edges covered: 1685.145020 / 28072
 Iterations: 7000 Seeds: 1000
- interesting: 1167, cov: 350970
-Average edges covered: 1626.787598 / 28072
+ interesting: 1190, cov: 354383, Unique Edges: 4420
+Average edges covered: 1688.027344 / 28072
 Iterations: 8000 Seeds: 1000
- interesting: 1226, cov: 354981
-Average edges covered: 1628.815918 / 28072
+ interesting: 1255, cov: 357940, Unique Edges: 4441
+Average edges covered: 1690.225952 / 28072
 Iterations: 9000 Seeds: 1000
- interesting: 1283, cov: 356375
-Average edges covered: 1631.359009 / 28072
+ interesting: 1339, cov: 361933, Unique Edges: 4462
+Average edges covered: 1691.063599 / 28072
 Iterations: 10000 Seeds: 1000
- interesting: 1336, cov: 360489
-Average edges covered: 1632.467163 / 28072
+ interesting: 1384, cov: 362730, Unique Edges: 4474
+Average edges covered: 1690.129517 / 28072
 Iterations: 11000 Seeds: 1000
- interesting: 1388, cov: 362354
-Average edges covered: 1632.658569 / 28072
+ interesting: 1437, cov: 363709, Unique Edges: 4488
+Average edges covered: 1689.625610 / 28072
 Iterations: 12000 Seeds: 1000
- interesting: 1434, cov: 363423
-Average edges covered: 1633.836182 / 28072
+ interesting: 1486, cov: 364851, Unique Edges: 4505
+Average edges covered: 1688.108643 / 28072
 Iterations: 13000 Seeds: 1000
- interesting: 1473, cov: 364314
-Average edges covered: 1636.239258 / 28072
+ interesting: 1534, cov: 366337, Unique Edges: 4512
+Average edges covered: 1688.345947 / 28072
 Iterations: 14000 Seeds: 1000
- interesting: 1519, cov: 364805
-Average edges covered: 1638.678467 / 28072
+ interesting: 1581, cov: 366842, Unique Edges: 4525
+Average edges covered: 1689.241455 / 28072
 Iterations: 15000 Seeds: 1000
- interesting: 1550, cov: 365650
-Average edges covered: 1639.606812 / 28072
+ interesting: 1618, cov: 368821, Unique Edges: 4543
+Average edges covered: 1691.314209 / 28072
 Iterations: 16000 Seeds: 1000
- interesting: 1575, cov: 366168
-Average edges covered: 1639.657227 / 28072
+ interesting: 1644, cov: 370532, Unique Edges: 4548
+Average edges covered: 1690.222412 / 28072
 Iterations: 17000 Seeds: 1000
- interesting: 1609, cov: 370762
-Average edges covered: 1638.712158 / 28072
+ interesting: 1682, cov: 373011, Unique Edges: 4558
+Average edges covered: 1691.741699 / 28072
 Iterations: 18000 Seeds: 1000
- interesting: 1632, cov: 371357
-Average edges covered: 1640.505737 / 28072
+ interesting: 1715, cov: 373428, Unique Edges: 4565
+Average edges covered: 1692.332886 / 28072
 Iterations: 19000 Seeds: 1000
- interesting: 1669, cov: 372665
-Average edges covered: 1640.892944 / 28072
+ interesting: 1759, cov: 374160, Unique Edges: 4584
+Average edges covered: 1692.534912 / 28072
 Iterations: 20000 Seeds: 1000
- interesting: 1702, cov: 373128
-Average edges covered: 1641.542603 / 28072
+ interesting: 1789, cov: 374316, Unique Edges: 4591
+Average edges covered: 1693.804321 / 28072
 Iterations: 21000 Seeds: 1000
- interesting: 1723, cov: 373616
-Average edges covered: 1641.683716 / 28072
+ interesting: 1805, cov: 374583, Unique Edges: 4596
+Average edges covered: 1693.877441 / 28072
 Iterations: 22000 Seeds: 1000
- interesting: 1755, cov: 374173
-Average edges covered: 1643.465088 / 28072
+ interesting: 1827, cov: 375898, Unique Edges: 4598
+Average edges covered: 1694.668335 / 28072
 Iterations: 23000 Seeds: 1000
- interesting: 1775, cov: 374951
-Average edges covered: 1644.265015 / 28072
+ interesting: 1860, cov: 376693, Unique Edges: 4600
+Average edges covered: 1695.607300 / 28072
 Iterations: 24000 Seeds: 1000
- interesting: 1788, cov: 375172
-Average edges covered: 1644.016968 / 28072
+ interesting: 1888, cov: 380469, Unique Edges: 4612
+Average edges covered: 1695.340698 / 28072
 Iterations: 25000 Seeds: 1000
- interesting: 1815, cov: 375749
-Average edges covered: 1644.892944 / 28072
+ interesting: 1915, cov: 380823, Unique Edges: 4621
+Average edges covered: 1695.201904 / 28072
 Iterations: 26000 Seeds: 1000
- interesting: 1845, cov: 376305
-Average edges covered: 1645.082764 / 28072
+ interesting: 1939, cov: 381228, Unique Edges: 4629
+Average edges covered: 1695.098999 / 28072
 Iterations: 27000 Seeds: 1000
- interesting: 1867, cov: 376641
-Average edges covered: 1645.923828 / 28072
+ interesting: 1953, cov: 381359, Unique Edges: 4632
+Average edges covered: 1694.983765 / 28072
 Iterations: 28000 Seeds: 1000
- interesting: 1888, cov: 377104
-Average edges covered: 1645.659790 / 28072
+ interesting: 1974, cov: 381522, Unique Edges: 4640
+Average edges covered: 1694.719727 / 28072
+Iterations: 29000 Seeds: 1000
+ interesting: 1993, cov: 381771, Unique Edges: 4644
+Average edges covered: 1694.542603 / 28072
+Iterations: 30000 Seeds: 1000
+ interesting: 2014, cov: 382300, Unique Edges: 4648
+Average edges covered: 1694.604980 / 28072
+Iterations: 31000 Seeds: 1000
+ interesting: 2030, cov: 382551, Unique Edges: 4660
+Average edges covered: 1695.043335 / 28072
+Iterations: 32000 Seeds: 1000
+ interesting: 2042, cov: 382952, Unique Edges: 4664
+Average edges covered: 1695.288818 / 28072
+Iterations: 33000 Seeds: 1000
+ interesting: 2066, cov: 383473, Unique Edges: 4682
+Average edges covered: 1695.447144 / 28072
+Iterations: 34000 Seeds: 1000
+ interesting: 2083, cov: 383838, Unique Edges: 4686
+Average edges covered: 1695.918091 / 28072
+Iterations: 35000 Seeds: 1000
+ interesting: 2092, cov: 383903, Unique Edges: 4689
+Average edges covered: 1696.029175 / 28072

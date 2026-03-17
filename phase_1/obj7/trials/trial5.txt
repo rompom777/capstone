@@ -1,0 +1,6 @@
+Iterations: 1000 Seeds: 3
+Crash detected! Signal: 4
+Crashing input (length 3):
+\x71\x61\x4D
+Number of tests before crash: 1043
+Elapsed time: 10 seconds

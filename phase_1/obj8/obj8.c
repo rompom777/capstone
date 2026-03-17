@@ -273,11 +273,20 @@ int main()
         if (iterations % 1000 == 0)
         {
             int total_cov = 0;
+            int unique_edges = 0;
+
             for(size_t i = 0; i < edge_size; i++) {
                 total_cov += (int)(edge_counters[i]);
             }
-            printf("Iterations: %d Seeds: %d interesting: %zu, cov %d\n", iterations, num_seeds, interesting_cases, total_cov);
-            fprintf(f, "Iterations: %d Seeds: %d\n interesting: %zu, cov: %d\n", iterations, num_seeds, interesting_cases, total_cov);
+
+            for(size_t i=0; i < edge_size; i++){
+                if(edge_counters[i] > 0){
+                    unique_edges++;
+                }
+            }
+            
+            printf("Iterations: %d Seeds: %d interesting: %zu, cov %d, Unique Edges: %d\n", iterations, num_seeds, interesting_cases, total_cov, unique_edges);
+            fprintf(f, "Iterations: %d Seeds: %d\n interesting: %zu, cov: %d, Unique Edges: %d\n", iterations, num_seeds, interesting_cases, total_cov, unique_edges);
             fprintf(f, "Average edges covered: %f / %zu\n", avg_edges_covered, edge_size);
             fflush(stdout);
             fflush(f);

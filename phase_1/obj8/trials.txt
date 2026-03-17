@@ -1,0 +1,14 @@
+Trial 1:
+Average edges covered: 1634.578613 / 28072
+Iterations: 4807000 Seeds: 1000
+ interesting: 5411, cov: 509076, Unique Edges: 5324
+
+Trial 2:
+Average edges covered: 1671.483398 / 28072
+Iterations: 4878000 Seeds: 1000
+ interesting: 5355, cov: 529089, Unique Edges: 5342
+
+Trial 3: 
+Average edges covered: 1650.452881 / 28072
+Iterations: 4752000 Seeds: 1000
+ interesting: 5274, cov: 517042, Unique Edges: 5325
