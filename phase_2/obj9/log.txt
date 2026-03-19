@@ -1,0 +1,10 @@
+Iterations: 1000 | 83.3 iter/s | Seeds: 440 | Interesting: 349 | Cov: 323915 | Unique Edges: 4170
+Average edges covered: 1622.648438 / 28072
+Iterations: 2000 | 76.9 iter/s | Seeds: 655 | Interesting: 564 | Cov: 333119 | Unique Edges: 4267
+Average edges covered: 1602.733765 / 28072
+Iterations: 3000 | 83.3 iter/s | Seeds: 825 | Interesting: 734 | Cov: 338525 | Unique Edges: 4327
+Average edges covered: 1616.049805 / 28072
+Iterations: 4000 | 76.9 iter/s | Seeds: 990 | Interesting: 899 | Cov: 346089 | Unique Edges: 4361
+Average edges covered: 1636.381226 / 28072
+Iterations: 5000 | 83.3 iter/s | Seeds: 1000 | Interesting: 1005 | Cov: 350067 | Unique Edges: 4387
+Average edges covered: 1646.574585 / 28072

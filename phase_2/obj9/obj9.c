@@ -15,6 +15,12 @@
 #define RAND_BYTE() (uint8_t)(rand() % 256)
 #define TARGET_NAME "./pdftotext"
 
+#define FORKSRV_FD 198
+static int go_pipe[2]; //sends go signal
+static int st_pipe[2];  //recieves status signal
+
+static pid_t forkserver_pid;
+
 struct Seed
 {
     uint8_t seed_buffer[INPUT_LENGTH + 1];
@@ -156,38 +162,24 @@ void save_to_intresting(const uint8_t *input, int seed_num, size_t size){
     }
 }
 
-int run_target(const uint8_t *input, size_t size, char *target_name) {
+int run_target(const uint8_t *input, size_t size) {
     
     input_to_file(INPUT_FILE, input, size);
     unlink("coverage.data");
 
-    pid_t pid = fork();
-        
-    if (pid == -1)
-    {
-        perror("fork failed");
-        return 0;
-    }
-        
-    if (pid == 0)
-    {
-        freopen("/dev/null", "w", stdout);
-        freopen("/dev/null", "w", stderr);
-
-        char *args[] = {target_name, INPUT_FILE, NULL};
-        execve(target_name, args, NULL);
-        
-        perror("execve failed");
-        _exit(1);
+    uint32_t go = 0xDEADBEEF;
+    if (write(go_pipe[1], &go, 4) != 4) {
+        perror("write GO");
+        exit(1);
     }
 
-    int status;
-    waitpid(pid, &status, 0);
-
-    if (WIFSIGNALED(status) || WEXITSTATUS(status) >= 128) {
-        return WTERMSIG(status);
+    uint32_t child_status;
+    if (read(st_pipe[0], &child_status, 4) != 4) {
+        perror("read STATUS");
+        exit(1);
     }
-    return 0;
+
+    return (int)child_status;
 }
 
 void load_seeds() {
@@ -217,7 +209,7 @@ void load_seeds() {
                     size_t bytes_read = fread(buffer, 1, fsize, f);
                     
                     if (bytes_read == fsize) {
-                        run_target(buffer, bytes_read, TARGET_NAME); 
+                        run_target(buffer, bytes_read); 
                         int hit_count;
                         if (update_coverage(&hit_count)) {
                             if (num_seeds < MAX_SEEDS) {
@@ -237,9 +229,53 @@ void load_seeds() {
     printf("Loaded %d seeds\n", num_seeds);
 }
 
+void start_forkserver(const char *target_path) {
+    if (pipe(go_pipe) || pipe(st_pipe)) {
+        perror("fork server pipe setup");
+        exit(1);
+    }
+
+    forkserver_pid = fork();
+    if (forkserver_pid < 0) {
+        perror("fork server start");
+        exit(1);
+    }
+
+    if (forkserver_pid == 0) {
+        dup2(go_pipe[0], FORKSRV_FD);
+        dup2(st_pipe[1],  FORKSRV_FD + 1);
+
+        close(go_pipe[0]);
+        close(go_pipe[1]);
+        close(st_pipe[0]);
+        close(st_pipe[1]);
+
+        freopen("/dev/null", "w", stdout);
+        freopen("/dev/null", "w", stderr);
+
+        execl(target_path, target_path, NULL);
+        perror("fork server exec");
+        exit(1);
+    }
+
+    close(go_pipe[0]);
+    close(st_pipe[1]);
+
+    // wait for hello signal from forkserver
+    uint32_t hello;
+    if (read(st_pipe[0], &hello, 4) != 4) {
+        perror("forkserver did not say hello");
+        exit(1);
+    }
+
+    printf("Forkserver ready\n");
+}
+
 
 int main()
 {
+    
+
     // Open log file
     FILE *f = fopen("log.txt", "w");
 
@@ -247,6 +283,9 @@ int main()
     srand(time(NULL));
     time_t start = time(NULL);
     time_t last_checkpoint = start;
+
+    //start forkserver
+    start_forkserver(TARGET_NAME);    
 
     load_seeds();
     int iterations = 0;
@@ -300,11 +339,11 @@ int main()
             fflush(f);
         }
 
-        int sig = run_target(input, input_size, TARGET_NAME);
+        int status = run_target(input, input_size);
 
-        if (sig != 0)
+        if (WIFSIGNALED(status))
         {
-            printf("Crash detected! Signal: %d\n", sig);
+            printf("Crash detected! Signal: %d\n", WTERMSIG(status));
             printf("Crashing input (length %zu):\n", input_size);
             printf("\n");
             printf("Number of tests before crash: %d\n", iterations);
@@ -313,7 +352,7 @@ int main()
             printf("Elapsed time: %.0f seconds\n", difftime(end, start));
 
             // Write summary to log
-            fprintf(f, "Crash detected! Signal: %d\n", sig);
+            fprintf(f, "Crash detected! Signal: %d\n", WTERMSIG(status));
             fprintf(f, "Crashing input (length %zu):\n", input_size);
             fprintf(f, "\n");
             fprintf(f, "Number of tests before crash: %d\n", iterations);
