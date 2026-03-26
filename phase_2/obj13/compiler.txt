@@ -1,0 +1,1 @@
+clang obj10.c -o fuzzer -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wundef -Wstrict-prototypes -O2
