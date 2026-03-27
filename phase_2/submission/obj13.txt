@@ -1,0 +1,341 @@
+=== Compiler Output (Release Build) ===
+clang obj10.c -o fuzzer -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wundef -Wstrict-prototypes -O2
+
+=== cppcheck Output ===
+Checking instrumentation.c ...
+1/2 files checked 20% done
+Checking obj10.c ...
+2/2 files checked 100% done
+instrumentation.c:36:0: style: The function '__sanitizer_cov_8bit_counters_init' is never used. [unusedFunction]
+
+^
+instrumentation.c:121:0: style: The function '__wrap_main' is never used. [unusedFunction]
+
+^
+
+=== scan-build Output ===
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+ <key>clang_version</key>
+<string>clang version 21.1.8 (CentOS 21.1.8-2.el9)</string>
+ <key>diagnostics</key>
+ <array>
+ </array>
+ <key>files</key>
+ <array>
+ </array>
+</dict>
+</plist>
+
+=== Valgrind Output (1 minute) ===
+==3403623== Memcheck, a memory error detector
+==3403623== Copyright (C) 2002-2024, and GNU GPL'd, by Julian Seward et al.
+==3403623== Using Valgrind-3.26.0 and LibVEX; rerun with -h for copyright info
+==3403623== Command: ./fuzzer
+==3403623== 
+RAM disk working directory: /tmp/3403623
+RAM disk working directory: /tmp/3403623
+Forkserver ready
+Loaded seed: sample-regions.pdf (13161 bytes)
+Loaded seed: sample-animals-de.pdf (13625 bytes)
+Loaded seed: something.pdf (12709 bytes)
+Loaded seed: BZ9.pdf (11477 bytes)
+Loaded seed: sample-animals2.pdf (12656 bytes)
+Loaded seed: fullpage-example.pdf (11414 bytes)
+Loaded seed: purifyeps.man1.pdf (12629 bytes)
+Loaded seed: GS_set_EAN_control_digit.pdf (13669 bytes)
+Loaded seed: example-program.pdf (13206 bytes)
+Loaded seed: DDC-30.pdf (11338 bytes)
+Loaded seed: fithesis-fss-color.pdf (11933 bytes)
+Loaded seed: W.pdf (12716 bytes)
+Loaded seed: pfb2pfa.man1.pdf (12882 bytes)
+Loaded seed: fithesis-fsps.pdf (11730 bytes)
+Loaded seed: example1-minimal.pdf (11486 bytes)
+Loaded seed: fithesis-econ.pdf (12932 bytes)
+Loaded seed: langsci_spinelogo_nocolor.pdf (13610 bytes)
+Loaded seed: dpe-4.pdf (12438 bytes)
+Loaded seed: nqueen.pdf (12971 bytes)
+Loaded seed: interchartest.pdf (11406 bytes)
+Loaded seed: delay-information-delivery.pdf (12087 bytes)
+Loaded seed: vecb6.pdf (11897 bytes)
+Loaded seed: example-image-c.pdf (11707 bytes)
+Loaded seed: vecb5.pdf (11692 bytes)
+Loaded seed: testms.pdf (12016 bytes)
+Loaded seed: fontspec.pdf (13595 bytes)
+Loaded seed: DDC-27.pdf (11376 bytes)
+Loaded seed: mp.pdf (11304 bytes)
+Loaded seed: b6of4.pdf (13025 bytes)
+Loaded seed: test-foreground-LTR.pdf (11289 bytes)
+Loaded seed: dummy-l.pdf (12470 bytes)
+Loaded seed: listings-utf8-ex.pdf (13894 bytes)
+Loaded seed: docs-boxshape.pdf (12002 bytes)
+Loaded seed: sample-animals2-de3.pdf (13607 bytes)
+Loaded seed: palm.pdf (13644 bytes)
+Loaded seed: fig-page-parameters-en.pdf (13824 bytes)
+Loaded seed: thai.pdf (12567 bytes)
+Loaded seed: test-RTL.pdf (11299 bytes)
+Loaded seed: pict2e-ex.pdf (11535 bytes)
+Loaded seed: example3-defined-path.pdf (12759 bytes)
+Loaded seed: test-LTR.pdf (11292 bytes)
+Loaded seed: example2-cancel-quotation.pdf (11481 bytes)
+Loaded seed: ma-cb-00.pdf (13318 bytes)
+Loaded seed: land-sample-slide.pdf (12830 bytes)
+Loaded seed: test-jlreq.pdf (12473 bytes)
+Loaded seed: beamernavsymbols.pdf (13550 bytes)
+Loaded seed: test.pdf (11866 bytes)
+Loaded seed: README.pdf (13439 bytes)
+Loaded seed: BZ7.pdf (11308 bytes)
+Loaded seed: guil-test2.pdf (13577 bytes)
+Loaded seed: gr-Circulant.pdf (13458 bytes)
+Loaded seed: DDC-09.pdf (11370 bytes)
+Loaded seed: fithesis-phil-color.pdf (12736 bytes)
+Loaded seed: circuitikz-context.pdf (12314 bytes)
+Loaded seed: fig5.pdf (11325 bytes)
+Loaded seed: vecb1.pdf (12497 bytes)
+Loaded seed: t1test.pdf (11855 bytes)
+Loaded seed: Foto.pdf (13720 bytes)
+Loaded seed: seu-badge-logo.pdf (11836 bytes)
+Loaded seed: thai_utf8.pdf (12563 bytes)
+Loaded seed: DDC-24.pdf (11278 bytes)
+Loaded seed: fithesis-fsps-color.pdf (12560 bytes)
+Loaded seed: showfont.pdf (13933 bytes)
+Loaded seed: div2.pdf (11875 bytes)
+Loaded seed: pst.pdf (11720 bytes)
+Loaded seed: uporto-feup.pdf (12740 bytes)
+Loaded seed: button1e.pdf (13076 bytes)
+Loaded seed: vecb3.pdf (13080 bytes)
+Loaded seed: 3-eledpar_mwe.pdf (12221 bytes)
+Loaded seed: port-sample-slide.pdf (12899 bytes)
+Loaded seed: tex-label-demo.pdf (11625 bytes)
+Loaded seed: 3-reledpar_mwe.pdf (12216 bytes)
+Loaded seed: biblatex-true-citepages-omit-example.pdf (11629 bytes)
+Loaded seed: fithesis-fi.pdf (11624 bytes)
+Loaded seed: test-foreground-RTL.pdf (11314 bytes)
+Loaded seed: bizex.pdf (12046 bytes)
+Loaded seed: minibook-en.pdf (11889 bytes)
+Loaded seed: buttonge.pdf (12612 bytes)
+Loaded seed: psutils.man1.pdf (13340 bytes)
+Loaded seed: eps_demo.pdf (12379 bytes)
+Loaded seed: 95-customlists-biber.pdf (12157 bytes)
+Loaded seed: cascadedemo.pdf (12780 bytes)
+Loaded seed: fithesis-fi-color.pdf (11808 bytes)
+Loaded seed: BZ10.pdf (12575 bytes)
+Loaded seed: example-image-a.pdf (12160 bytes)
+Loaded seed: double.pdf (12573 bytes)
+Loaded seed: vecb4.pdf (12926 bytes)
+Loaded seed: ei-title.pdf (13141 bytes)
+Loaded seed: simbin.pdf (12612 bytes)
+Loaded seed: shuji.pdf (11711 bytes)
+Loaded seed: b6of3.pdf (12823 bytes)
+Loaded 91 seeds
+Iterations: 1000 | 111.1 iter/s | Seeds: 429 | Interesting: 338 | Cov: 319330 | Unique Edges: 4153
+Iterations: 2000 | 111.1 iter/s | Seeds: 670 | Interesting: 579 | Cov: 331739 | Unique Edges: 4235
+Iterations: 3000 | 111.1 iter/s | Seeds: 834 | Interesting: 743 | Cov: 337861 | Unique Edges: 4317
+Iterations: 4000 | 111.1 iter/s | Seeds: 961 | Interesting: 870 | Cov: 343257 | Unique Edges: 4358
+Iterations: 5000 | 125.0 iter/s | Seeds: 1000 | Interesting: 991 | Cov: 347536 | Unique Edges: 4374
+Iterations: 6000 | 111.1 iter/s | Seeds: 1000 | Interesting: 1096 | Cov: 351155 | Unique Edges: 4404
+==3403623== 
+==3403623== Process terminating with default action of signal 15 (SIGTERM)
+==3403623==    at 0x496D0C2: read (read.c:26)
+==3403623==    by 0x40188B: run_target (in /home/grads/romanz/capstone/phase_2/obj13/fuzzer)
+==3403623==    by 0x402063: main (in /home/grads/romanz/capstone/phase_2/obj13/fuzzer)
+==3403623== 
+==3403623== HEAP SUMMARY:
+==3403623==     in use at exit: 45,608 bytes in 8 blocks
+==3403623==   total heap usage: 28,807 allocs, 28,799 frees, 64,189,880 bytes allocated
+==3403623== 
+==3403623== 24 bytes in 1 blocks are still reachable in loss record 1 of 8
+==3403623==    at 0x484682F: malloc (vg_replace_malloc.c:447)
+==3403623==    by 0x48B2A82: __environ_new_array (setenv.c:127)
+==3403623==    by 0x48B2A82: __add_to_environ (setenv.c:203)
+==3403623==    by 0x4855F9F: setenv (vg_replace_strmem.c:2528)
+==3403623==    by 0x401D87: main (in /home/grads/romanz/capstone/phase_2/obj13/fuzzer)
+==3403623== 
+==3403623== 24 bytes in 1 blocks are still reachable in loss record 2 of 8
+==3403623==    at 0x484682F: malloc (vg_replace_malloc.c:447)
+==3403623==    by 0x48B2B0E: __add_to_environ (setenv.c:251)
+==3403623==    by 0x4855F9F: setenv (vg_replace_strmem.c:2528)
+==3403623==    by 0x401D87: main (in /home/grads/romanz/capstone/phase_2/obj13/fuzzer)
+==3403623== 
+==3403623== 24 bytes in 1 blocks are still reachable in loss record 3 of 8
+==3403623==    at 0x484682F: malloc (vg_replace_malloc.c:447)
+==3403623==    by 0x4977F29: tsearch (tsearch.c:338)
+==3403623==    by 0x48B2B7B: __add_to_environ (setenv.c:274)
+==3403623==    by 0x4855F9F: setenv (vg_replace_strmem.c:2528)
+==3403623==    by 0x401D87: main (in /home/grads/romanz/capstone/phase_2/obj13/fuzzer)
+==3403623== 
+==3403623== 472 bytes in 1 blocks are still reachable in loss record 4 of 8
+==3403623==    at 0x484682F: malloc (vg_replace_malloc.c:447)
+==3403623==    by 0x48E58CE: __fopen_internal (iofopen.c:65)
+==3403623==    by 0x401DAF: main (in /home/grads/romanz/capstone/phase_2/obj13/fuzzer)
+==3403623== 
+==3403623== 608 bytes in 1 blocks are still reachable in loss record 5 of 8
+==3403623==    at 0x484E4A4: calloc (vg_replace_malloc.c:1678)
+==3403623==    by 0x48B2A6A: __environ_new_array (setenv.c:123)
+==3403623==    by 0x48B2A6A: __add_to_environ (setenv.c:203)
+==3403623==    by 0x4855F9F: setenv (vg_replace_strmem.c:2528)
+==3403623==    by 0x401D87: main (in /home/grads/romanz/capstone/phase_2/obj13/fuzzer)
+==3403623== 
+==3403623== 8,192 bytes in 1 blocks are still reachable in loss record 6 of 8
+==3403623==    at 0x484682F: malloc (vg_replace_malloc.c:447)
+==3403623==    by 0x48E4FE4: _IO_file_doallocate (filedoalloc.c:101)
+==3403623==    by 0x48F327F: _IO_doallocbuf (genops.c:348)
+==3403623==    by 0x48F327F: _IO_doallocbuf (genops.c:343)
+==3403623==    by 0x48F25F7: _IO_file_overflow@@GLIBC_2.2.5 (fileops.c:780)
+==3403623==    by 0x48F1535: _IO_new_file_xsputn (fileops.c:1306)
+==3403623==    by 0x48F1535: _IO_file_xsputn@@GLIBC_2.2.5 (fileops.c:1259)
+==3403623==    by 0x48CD71F: outstring_func (vfprintf-internal.c:239)
+==3403623==    by 0x48CD71F: __vfprintf_internal (vfprintf-internal.c:1412)
+==3403623==    by 0x48C386E: printf (printf.c:33)
+==3403623==    by 0x401DA0: main (in /home/grads/romanz/capstone/phase_2/obj13/fuzzer)
+==3403623== 
+==3403623== 8,192 bytes in 1 blocks are still reachable in loss record 7 of 8
+==3403623==    at 0x484682F: malloc (vg_replace_malloc.c:447)
+==3403623==    by 0x48E4FE4: _IO_file_doallocate (filedoalloc.c:101)
+==3403623==    by 0x48F327F: _IO_doallocbuf (genops.c:348)
+==3403623==    by 0x48F327F: _IO_doallocbuf (genops.c:343)
+==3403623==    by 0x48F25F7: _IO_file_overflow@@GLIBC_2.2.5 (fileops.c:780)
+==3403623==    by 0x48F1535: _IO_new_file_xsputn (fileops.c:1306)
+==3403623==    by 0x48F1535: _IO_file_xsputn@@GLIBC_2.2.5 (fileops.c:1259)
+==3403623==    by 0x48CD71F: outstring_func (vfprintf-internal.c:239)
+==3403623==    by 0x48CD71F: __vfprintf_internal (vfprintf-internal.c:1412)
+==3403623==    by 0x48C3079: fprintf (fprintf.c:32)
+==3403623==    by 0x401FFB: main (in /home/grads/romanz/capstone/phase_2/obj13/fuzzer)
+==3403623== 
+==3403623== 28,072 bytes in 1 blocks are still reachable in loss record 8 of 8
+==3403623==    at 0x484682F: malloc (vg_replace_malloc.c:447)
+==3403623==    by 0x4016B2: update_coverage (in /home/grads/romanz/capstone/phase_2/obj13/fuzzer)
+==3403623==    by 0x401A09: load_seeds (in /home/grads/romanz/capstone/phase_2/obj13/fuzzer)
+==3403623==    by 0x401DE9: main (in /home/grads/romanz/capstone/phase_2/obj13/fuzzer)
+==3403623== 
+==3403623== LEAK SUMMARY:
+==3403623==    definitely lost: 0 bytes in 0 blocks
+==3403623==    indirectly lost: 0 bytes in 0 blocks
+==3403623==      possibly lost: 0 bytes in 0 blocks
+==3403623==    still reachable: 45,608 bytes in 8 blocks
+==3403623==         suppressed: 0 bytes in 0 blocks
+==3403623== 
+==3403623== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+
+=== ASAN/UBSAN Output (1 minute) ===
+RAM disk working directory: /tmp/3466193
+RAM disk working directory: /tmp/3466193
+Forkserver ready
+Loaded seed: sample-regions.pdf (13161 bytes)
+Loaded seed: sample-animals-de.pdf (13625 bytes)
+Loaded seed: something.pdf (12709 bytes)
+Loaded seed: BZ9.pdf (11477 bytes)
+Loaded seed: sample-animals2.pdf (12656 bytes)
+Loaded seed: fullpage-example.pdf (11414 bytes)
+Loaded seed: purifyeps.man1.pdf (12629 bytes)
+Loaded seed: GS_set_EAN_control_digit.pdf (13669 bytes)
+Loaded seed: example-program.pdf (13206 bytes)
+Loaded seed: DDC-30.pdf (11338 bytes)
+Loaded seed: fithesis-fss-color.pdf (11933 bytes)
+Loaded seed: W.pdf (12716 bytes)
+Loaded seed: pfb2pfa.man1.pdf (12882 bytes)
+Loaded seed: fithesis-fsps.pdf (11730 bytes)
+Loaded seed: example1-minimal.pdf (11486 bytes)
+Loaded seed: fithesis-econ.pdf (12932 bytes)
+Loaded seed: langsci_spinelogo_nocolor.pdf (13610 bytes)
+Loaded seed: dpe-4.pdf (12438 bytes)
+Loaded seed: nqueen.pdf (12971 bytes)
+Loaded seed: interchartest.pdf (11406 bytes)
+Loaded seed: delay-information-delivery.pdf (12087 bytes)
+Loaded seed: vecb6.pdf (11897 bytes)
+Loaded seed: example-image-c.pdf (11707 bytes)
+Loaded seed: vecb5.pdf (11692 bytes)
+Loaded seed: testms.pdf (12016 bytes)
+Loaded seed: fontspec.pdf (13595 bytes)
+Loaded seed: DDC-27.pdf (11376 bytes)
+Loaded seed: mp.pdf (11304 bytes)
+Loaded seed: b6of4.pdf (13025 bytes)
+Loaded seed: test-foreground-LTR.pdf (11289 bytes)
+Loaded seed: dummy-l.pdf (12470 bytes)
+Loaded seed: listings-utf8-ex.pdf (13894 bytes)
+Loaded seed: docs-boxshape.pdf (12002 bytes)
+Loaded seed: sample-animals2-de3.pdf (13607 bytes)
+Loaded seed: palm.pdf (13644 bytes)
+Loaded seed: fig-page-parameters-en.pdf (13824 bytes)
+Loaded seed: thai.pdf (12567 bytes)
+Loaded seed: test-RTL.pdf (11299 bytes)
+Loaded seed: pict2e-ex.pdf (11535 bytes)
+Loaded seed: example3-defined-path.pdf (12759 bytes)
+Loaded seed: test-LTR.pdf (11292 bytes)
+Loaded seed: example2-cancel-quotation.pdf (11481 bytes)
+Loaded seed: ma-cb-00.pdf (13318 bytes)
+Loaded seed: land-sample-slide.pdf (12830 bytes)
+Loaded seed: test-jlreq.pdf (12473 bytes)
+Loaded seed: beamernavsymbols.pdf (13550 bytes)
+Loaded seed: test.pdf (11866 bytes)
+Loaded seed: README.pdf (13439 bytes)
+Loaded seed: BZ7.pdf (11308 bytes)
+Loaded seed: guil-test2.pdf (13577 bytes)
+Loaded seed: gr-Circulant.pdf (13458 bytes)
+Loaded seed: DDC-09.pdf (11370 bytes)
+Loaded seed: fithesis-phil-color.pdf (12736 bytes)
+Loaded seed: circuitikz-context.pdf (12314 bytes)
+Loaded seed: fig5.pdf (11325 bytes)
+Loaded seed: vecb1.pdf (12497 bytes)
+Loaded seed: t1test.pdf (11855 bytes)
+Loaded seed: Foto.pdf (13720 bytes)
+Loaded seed: seu-badge-logo.pdf (11836 bytes)
+Loaded seed: thai_utf8.pdf (12563 bytes)
+Loaded seed: DDC-24.pdf (11278 bytes)
+Loaded seed: fithesis-fsps-color.pdf (12560 bytes)
+Loaded seed: showfont.pdf (13933 bytes)
+Loaded seed: div2.pdf (11875 bytes)
+Loaded seed: pst.pdf (11720 bytes)
+Loaded seed: uporto-feup.pdf (12740 bytes)
+Loaded seed: button1e.pdf (13076 bytes)
+Loaded seed: vecb3.pdf (13080 bytes)
+Loaded seed: 3-eledpar_mwe.pdf (12221 bytes)
+Loaded seed: port-sample-slide.pdf (12899 bytes)
+Loaded seed: tex-label-demo.pdf (11625 bytes)
+Loaded seed: 3-reledpar_mwe.pdf (12216 bytes)
+Loaded seed: biblatex-true-citepages-omit-example.pdf (11629 bytes)
+Loaded seed: fithesis-fi.pdf (11624 bytes)
+Loaded seed: test-foreground-RTL.pdf (11314 bytes)
+Loaded seed: bizex.pdf (12046 bytes)
+Loaded seed: minibook-en.pdf (11889 bytes)
+Loaded seed: buttonge.pdf (12612 bytes)
+Loaded seed: psutils.man1.pdf (13340 bytes)
+Loaded seed: eps_demo.pdf (12379 bytes)
+Loaded seed: 95-customlists-biber.pdf (12157 bytes)
+Loaded seed: cascadedemo.pdf (12780 bytes)
+Loaded seed: fithesis-fi-color.pdf (11808 bytes)
+Loaded seed: BZ10.pdf (12575 bytes)
+Loaded seed: example-image-a.pdf (12160 bytes)
+Loaded seed: double.pdf (12573 bytes)
+Loaded seed: vecb4.pdf (12926 bytes)
+Loaded seed: ei-title.pdf (13141 bytes)
+Loaded seed: simbin.pdf (12612 bytes)
+Loaded seed: shuji.pdf (11711 bytes)
+Loaded seed: b6of3.pdf (12823 bytes)
+Loaded 91 seeds
+Iterations: 1000 | 200.0 iter/s | Seeds: 429 | Interesting: 338 | Cov: 321974 | Unique Edges: 4124
+Iterations: 2000 | 200.0 iter/s | Seeds: 662 | Interesting: 571 | Cov: 335455 | Unique Edges: 4260
+Iterations: 3000 | 166.7 iter/s | Seeds: 849 | Interesting: 758 | Cov: 341637 | Unique Edges: 4309
+Iterations: 4000 | 200.0 iter/s | Seeds: 994 | Interesting: 903 | Cov: 344562 | Unique Edges: 4354
+Iterations: 5000 | 166.7 iter/s | Seeds: 1000 | Interesting: 1019 | Cov: 346325 | Unique Edges: 4385
+Iterations: 6000 | 166.7 iter/s | Seeds: 1000 | Interesting: 1112 | Cov: 348755 | Unique Edges: 4417
+Iterations: 7000 | 200.0 iter/s | Seeds: 1000 | Interesting: 1182 | Cov: 350533 | Unique Edges: 4433
+Iterations: 8000 | 166.7 iter/s | Seeds: 1000 | Interesting: 1241 | Cov: 351542 | Unique Edges: 4444
+Iterations: 9000 | 200.0 iter/s | Seeds: 1000 | Interesting: 1309 | Cov: 353395 | Unique Edges: 4459
+Iterations: 10000 | 166.7 iter/s | Seeds: 1000 | Interesting: 1361 | Cov: 354972 | Unique Edges: 4472
+
+=== Cloc Output ===
+    2 text files.
+    2 unique files.                              
+    0 files ignored.
+
+github.com/AlDanial/cloc v 1.72  T=0.04 s (49.5 files/s, 15008.1 lines/s)
+-------------------------------------------------------------------------------
+Language                     files          blank        comment           code
+-------------------------------------------------------------------------------
+C                                2             96             36            474
+-------------------------------------------------------------------------------
+SUM:                             2             96             36            474
+-------------------------------------------------------------------------------
