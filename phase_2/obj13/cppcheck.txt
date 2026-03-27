@@ -1,0 +1,10 @@
+Checking instrumentation.c ...
+1/2 files checked 20% done
+Checking obj10.c ...
+2/2 files checked 100% done
+instrumentation.c:36:0: style: The function '__sanitizer_cov_8bit_counters_init' is never used. [unusedFunction]
+
+^
+instrumentation.c:121:0: style: The function '__wrap_main' is never used. [unusedFunction]
+
+^

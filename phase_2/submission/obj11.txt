@@ -1,0 +1,9 @@
+Number of executed test cases in 24 hours: 16,308,000
+Test case throughput relative to Objective 10: 1.013 times
+Pre question 1: I expect higher throughput since an inprocess fuzzer eliminates a lot of the process overhead from using fork, wait, etc.
+Pre question 2: We can use the same methods suggested in objective 9 such as using a pre-proccer macro or using the linkers --wrap option.
+Post question 1: 
+Post question 2: 
+Post question 3: 
+Post question 4: 
+Post question 5: 
