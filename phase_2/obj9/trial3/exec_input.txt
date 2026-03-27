@@ -1,0 +1,33 @@
+Parallel
+
+Abstract
+
+This file provides two minimal examples of typesetting parallel texts with reledmac plus reledpar.
+The first minimal example is parallel typesetting in columns, the second one is parallel typesetting in pages.
+
+Left side paragraph. Left side paragraph. Left side paragraph. Left side paragraph. Left side paragraph. Left side paragraph. Left side paragraph. 5 Left side paragraph.
+Other left side paragraph. Other left side paragraph. Other left side paragraph. Other left side paragraph. Other left side paragraph. Other left side para10 graph. Other left side paragraph. Other left side paragraph. Other left side paragraph. Other left side paragraph.
+
+Right side paragraph. Right side paragraph. Right side paragraph. Right side paragraph.
+Other right side paragraph. Other right side paragraph. Other right side 5R paragraph. Other right side paragraph. Other right side paragraph. Other right side paragraph. Other right side paragraph.
+
+1
+
+Left side paragraph. Left side paragraph. Left side paragraph. Left side paragraph. Left side paragraph. Left side paragraph. Left side paragraph. Left side paragraph.
+Other left side paragraph. Other left side paragraph. Other left side paragraph.
+
+Right side paragraph. Right side paragraph. Right side paragraph. Right side
+
+paragraph.
+
+Other right side paragraph. Other right side paragraph. Other right side para-
+
+graph. Other right side paragraph. Other right side paragraph. Other right side
+
+paragraph. Other right side paragraph.
+
+5R
+
+3
+
+
