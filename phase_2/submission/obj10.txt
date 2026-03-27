@@ -2,7 +2,7 @@ Number of executed test cases in 24 hours: 16,102,000
 Test case throughput relative to Objective 9: 
 Pre question 1: The fuzzer is disk bound since with every iterations, it writes to disk and reads the coverage file.
 Pre question 2: To mitigate the performance bottleneck you can write and read in RAM so that you remove the file I/O operations.
-Post question 1: 
+Post question 1: Yes, the throughput increased as expected. Moving file I/O from disk to a RAM disk removes a major bottleneck, significantly reducing latency per test case and allowing many more executions per second.
 Post question 2: Now its likely that the fuzzer is compute bound.
-Post question 3: 
+Post question 3: The fuzzer from the previous objective is disk-bound. This is because each test case requires reading and writing files to disk, which introduces significant I/O latency compared to CPU or memory operations. The noticeable increase in throughput after switching to a RAM disk confirms that disk I/O was the primary bottleneck.
 Post question 4: By eliminating the I/O calls entirely and finding a way to use shared memory. 

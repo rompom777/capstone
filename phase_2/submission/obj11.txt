@@ -2,8 +2,8 @@ Number of executed test cases in 24 hours: 16,308,000
 Test case throughput relative to Objective 10: 1.013 times
 Pre question 1: I expect higher throughput since an inprocess fuzzer eliminates a lot of the process overhead from using fork, wait, etc.
 Pre question 2: We can use the same methods suggested in objective 9 such as using a pre-proccer macro or using the linkers --wrap option.
-Post question 1: 
-Post question 2: 
-Post question 3: 
-Post question 4: 
-Post question 5: 
+Post question 1: Yes, throughput increased as expected because removing inter-process communication and running the fuzzer in-process reduces overhead.
+Post question 2: If there are no global changes, execution would be faster and safe since each run starts from the same state.
+Post question 3: A memory leak would accumulate over time, eventually slowing down or crashing the fuzzer.
+Post question 4: Global variable modifications would persist across test cases, leading to inconsistent behavior and incorrect results.
+Post question 5: Further performance can be improved by reducing fork overhead, optimizing mutations, and minimizing instrumentation cost.
