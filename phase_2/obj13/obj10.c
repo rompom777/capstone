@@ -130,6 +130,10 @@ bool update_coverage(int *hit_count) {
   if (edge_counters == NULL) {
     size_t size;
     FILE *f = fopen(coverage_file_path, "rb");
+    if (f == NULL) {
+      perror("fopen");
+      return NULL;
+    }
     fread(&size, sizeof(uint64_t), 1, f);
     fclose(f);
 
@@ -301,6 +305,10 @@ int main(void) {
 
   // Open log file
   FILE *f = fopen("log.txt", "w");
+  if (f == NULL) {
+    perror("fopen");
+    return 1;
+  }
 
   // Initialize randomizer with current time as seed
   srand((unsigned int)time(NULL));

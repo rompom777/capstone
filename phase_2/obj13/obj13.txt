@@ -14,7 +14,20 @@ instrumentation.c:121:0: style: The function '__wrap_main' is never used. [unuse
 ^
 
 === scan-build Output ===
-scan-build was attempted using the available LLVM toolchain, but failed due to missing shared libraries (libffi.so.6) on the system. No issues were reported during the attempted run.
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+ <key>clang_version</key>
+<string>clang version 21.1.8 (CentOS 21.1.8-2.el9)</string>
+ <key>diagnostics</key>
+ <array>
+ </array>
+ <key>files</key>
+ <array>
+ </array>
+</dict>
+</plist>
 
 === Valgrind Output (1 minute) ===
 ==3403623== Memcheck, a memory error detector
@@ -314,8 +327,15 @@ Iterations: 9000 | 200.0 iter/s | Seeds: 1000 | Interesting: 1309 | Cov: 353395 
 Iterations: 10000 | 166.7 iter/s | Seeds: 1000 | Interesting: 1361 | Cov: 354972 | Unique Edges: 4472
 
 === Cloc Output ===
-cloc was not available on the system; wc -l was used instead.
+    2 text files.
+    2 unique files.                              
+    0 files ignored.
 
-instrumentation.c: 121 lines
-obj10.c: 420 lines
-Total: 541 lines
+github.com/AlDanial/cloc v 1.72  T=0.04 s (49.5 files/s, 15008.1 lines/s)
+-------------------------------------------------------------------------------
+Language                     files          blank        comment           code
+-------------------------------------------------------------------------------
+C                                2             96             36            474
+-------------------------------------------------------------------------------
+SUM:                             2             96             36            474
+-------------------------------------------------------------------------------
