@@ -1,0 +1,29 @@
+Number of executed test cases in 24 hours: 6,628,000
+test case throughput relative to objective 8: 1.35 times
+
+pre question 1: a forkserver introduces increased complexity into a fuzzer.
+    Also it introduces the need for 3 running processes that need to coordinate
+    which can lead to state corruption on common file descriptors within the process.
+    Since there are 2 running processes for the target it's possible that coverage data can be simultaneously
+    written to by both processes at once causing unpredictable behavior.
+
+pre question 2: for short running processes that are not heavily IO bound a forkserver can have a huge
+    impact on fuzzer throughput as is removes the need to replace a running process through an exec call on
+    every iteration. However if the main bottleneck in execution speed is IO based operations such as reading files
+    from disk it may have a marginal effect on throughput.
+
+post question 1: I used the second recommended method with the --wrap= compiler option to rename the main method along with
+    an __attribute__((constructor)) to catch the program at startup and wait for start signals from the fuzzer which are sent 
+    though piped inputs.
+
+post question 2: pipes were used due to their ease of implementation as well as providing safe and predictable ipc where processes can send
+    messages between each other as well as providing process synchronization as read calls to the pipe wait for input from the other process before continueing.
+    While using an alternative for ipc such as shared memory would be faster, not requiring any calls to the kernel like pipes do, they lack the benefit of synchronization
+    and clever lock mechanisms would need to be implemented in order to prevent race conditions on the shared memory.
+
+post question 3: it is unimportant whether system or fork is used to spawn the hooked target as this is only called once at startup which leads to no significant effect on the throughput.
+
+post question 4: the 1.35 times while decent is nothing remarkable. This makes sense as the main bottleneck currently is that the fuzzer currently writes and reads from disk for both coverage data
+    and process input, and using memory mapped files will most likely lead to a much larger speedup that the forkserver.
+
+post question 5: if the fuzzer logic is moved from its own process to inside the target binary it would remove the need for one process as well as simplifying the IPC
