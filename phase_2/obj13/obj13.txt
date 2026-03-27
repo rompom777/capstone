@@ -315,3 +315,7 @@ Iterations: 10000 | 166.7 iter/s | Seeds: 1000 | Interesting: 1361 | Cov: 354972
 
 === Cloc Output ===
 cloc was not available on the system; wc -l was used instead.
+
+instrumentation.c: 121 lines
+obj10.c: 420 lines
+Total: 541 lines
