@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/mman.h>
 #include <sys/wait.h>
 #include <unistd.h>
 
@@ -11,6 +12,9 @@ static size_t counters_size = 0;
 
 static int is_forkserver_parent = 0;
 static char coverage_path[256];
+
+// Shared memory for coverage (fast path)
+static uint8_t *shm_ptr = NULL;
 
 // Coverage State
 void write_coverage_on_exit(void)
@@ -21,6 +25,16 @@ void write_coverage_on_exit(void)
   if (!counters_start)
     return;
 
+  if (shm_ptr)
+  {
+    // Fast path: write to shared memory (no syscalls)
+    uint64_t size_header = counters_size;
+    memcpy(shm_ptr, &size_header, sizeof(uint64_t));
+    memcpy(shm_ptr + sizeof(uint64_t), counters_start, counters_size);
+    return;
+  }
+
+  // Fallback: write to file
   FILE *f = fopen(coverage_path, "wb");
   if (!f)
   {
@@ -40,6 +54,23 @@ void __sanitizer_cov_8bit_counters_init(uint8_t *start, const uint8_t *stop)
   counters_start = start;
   counters_size = (size_t)(stop - start);
 
+  // Try to open shared memory created by the fuzzer
+  const char *shm_name = getenv("FUZZER_SHM");
+  if (shm_name)
+  {
+    int fd = shm_open(shm_name, O_RDWR, 0600);
+    if (fd >= 0)
+    {
+      size_t total = sizeof(uint64_t) + counters_size;
+      shm_ptr =
+          mmap(NULL, total, PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
+      if (shm_ptr == MAP_FAILED)
+        shm_ptr = NULL;
+      close(fd);
+    }
+  }
+
+  // Setup file-based fallback path
   const char *tmpdir = getenv("FUZZER_TMP");
   if (tmpdir)
   {
@@ -47,7 +78,6 @@ void __sanitizer_cov_8bit_counters_init(uint8_t *start, const uint8_t *stop)
   }
   else
   {
-    // fallback to current directory if env var not set
     snprintf(coverage_path, sizeof(coverage_path), "coverage.data");
   }
 
