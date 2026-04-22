@@ -5,10 +5,10 @@ TEST_CFLAGS=$(COMMON_CFLAGS) -O1 -g -fsanitize=address,undefined -fno-omit-frame
 RELEASE_CFLAGS=$(COMMON_CFLAGS) -O2
 
 fuzzer: phase3.c
-	$(CC) phase3.c -o fuzzer $(RELEASE_CFLAGS)
+	$(CC) phase3.c -o fuzzer $(RELEASE_CFLAGS) -lrt
 
 fuzzer_test: phase3.c
-	$(CC) phase3.c -o fuzzer_test $(TEST_CFLAGS)
+	$(CC) phase3.c -o fuzzer_test $(TEST_CFLAGS) -lrt
 
 clean:
 	rm -f fuzzer fuzzer_test

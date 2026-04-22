@@ -1,9 +1,11 @@
 #include <dirent.h>
+#include <fcntl.h>
 #include <stdbool.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/mman.h>
 #include <sys/stat.h>
 #include <sys/wait.h>
 #include <time.h>
@@ -25,6 +27,13 @@ static char input_file_path[512];
 static char coverage_file_path[512];
 static char crash_output_path[512];
 
+// Shared memory for coverage (eliminates file I/O per test)
+static char shm_name[64];
+static uint8_t *shm_cov = NULL;
+
+// Persistent fd for input file (eliminates open/close per test)
+static int input_fd = -1;
+
 struct Seed
 {
   uint8_t seed_buffer[INPUT_LENGTH + 1];
@@ -36,22 +45,46 @@ int num_seeds = 0;
 uint8_t *edge_counters = NULL;
 size_t edge_size = 0;
 
-// char generate_char()
-// {
-//     unsigned int index = (rand() % 62);
-//     if (index < 10)
-//     {
-//         return (unsigned char)(index + 48);
-//     }
-//     else if (index < 36)
-//     {
-//         return (unsigned char)(index + 55);
-//     }
-//     else
-//     {
-//         return (unsigned char)(index + 61);
-//     }
-// }
+void cleanup_shared_memory(void)
+{
+  if (shm_cov)
+  {
+    munmap(shm_cov, sizeof(uint64_t) + COVERAGE_SIZE);
+    shm_cov = NULL;
+  }
+  shm_unlink(shm_name);
+}
+
+void setup_shared_memory(void)
+{
+  snprintf(shm_name, sizeof(shm_name), "/fzcov_%d", getpid());
+
+  int fd = shm_open(shm_name, O_CREAT | O_RDWR, 0600);
+  if (fd < 0)
+  {
+    perror("shm_open");
+    exit(1);
+  }
+
+  size_t total = sizeof(uint64_t) + COVERAGE_SIZE;
+  if (ftruncate(fd, (off_t)total) != 0)
+  {
+    perror("ftruncate shm");
+    exit(1);
+  }
+
+  shm_cov = mmap(NULL, total, PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
+  if (shm_cov == MAP_FAILED)
+  {
+    perror("mmap shm");
+    exit(1);
+  }
+  close(fd);
+  memset(shm_cov, 0, total);
+
+  setenv("FUZZER_SHM", shm_name, 1);
+  atexit(cleanup_shared_memory);
+}
 
 void generate_input(uint8_t *input_buffer, size_t *size)
 {
@@ -62,6 +95,7 @@ void generate_input(uint8_t *input_buffer, size_t *size)
   }
 }
 
+// Used for non-hot-path writes (crash saving)
 void input_to_file(const char *filename, const uint8_t *input,
                    size_t num_bytes)
 {
@@ -75,6 +109,27 @@ void input_to_file(const char *filename, const uint8_t *input,
   fclose(f);
 }
 
+// Fast hot-path input write using persistent fd
+static void write_input_fast(const uint8_t *input, size_t num_bytes)
+{
+  if (lseek(input_fd, 0, SEEK_SET) < 0)
+  {
+    perror("lseek input");
+    exit(1);
+  }
+  ssize_t w = write(input_fd, input, num_bytes);
+  if (w < 0 || (size_t)w != num_bytes)
+  {
+    perror("write input");
+    exit(1);
+  }
+  if (ftruncate(input_fd, (off_t)num_bytes) != 0)
+  {
+    perror("ftruncate input");
+    exit(1);
+  }
+}
+
 void mutate_seed(uint8_t *new_input, const uint8_t *src, size_t size)
 {
   memcpy(new_input, src, size);
@@ -84,96 +139,86 @@ void mutate_seed(uint8_t *new_input, const uint8_t *src, size_t size)
   }
 }
 
-uint8_t *read_coverage_file_inplace(const char *filename, uint8_t *buffer,
-                                    size_t expected_size)
-{
-  FILE *f = fopen(filename, "rb");
-  if (!f)
-  {
-    perror("Failed to open coverage file");
-    return NULL;
-  }
-
-  // Read size header
-  uint64_t size;
-  if (fread(&size, sizeof(uint64_t), 1, f) != 1)
-  {
-    fprintf(stderr, "Failed to read size header\n");
-    fclose(f);
-    return NULL;
-  }
-
-  // Verify size matches (should be constant across runs)
-  if (expected_size > 0 && size != expected_size)
-  {
-    fprintf(stderr, "Size mismatch: expected %zu, got %lu\n", expected_size,
-            size);
-    fclose(f);
-    return NULL;
-  }
-
-  // Read directly into provided buffer
-  size_t bytes_read = fread(buffer, 1, size, f);
-
-  if (bytes_read != size)
-  {
-    fprintf(stderr, "Short read: expected %lu, got %zu\n", size, bytes_read);
-    fclose(f);
-    return NULL;
-  }
-
-  fclose(f);
-  return buffer; // Success
-}
-
 bool update_coverage(int *hit_count)
 {
-  // buffer for edge counters for new run
-  static uint8_t temp_buffer[COVERAGE_SIZE];
+  // Read coverage directly from shared memory (no file I/O)
+  uint64_t cov_size = *(uint64_t *)shm_cov;
+  uint8_t *new_counters = shm_cov + sizeof(uint64_t);
 
-  uint8_t *new_edge_counters =
-      read_coverage_file_inplace(coverage_file_path, temp_buffer, edge_size);
-
-  if (!new_edge_counters)
+  if (cov_size == 0)
   {
-    fprintf(stderr, "Error: failed to read coverage.data\n");
+    fprintf(stderr, "No coverage data in shared memory\n");
     return false;
   }
 
-  // first initialization of edge_counters
+  // First initialization of edge_counters
   if (edge_counters == NULL)
   {
-    size_t size;
-    FILE *f = fopen(coverage_file_path, "rb");
-    if (f == NULL)
-    {
-      perror("fopen");
-      return NULL;
-    }
-    fread(&size, sizeof(uint64_t), 1, f);
-    fclose(f);
-
-    edge_counters = malloc(size);
-    edge_size = size;
-    memcpy(edge_counters, temp_buffer, size);
+    edge_size = (size_t)cov_size;
+    edge_counters = malloc(edge_size);
+    memcpy(edge_counters, new_counters, edge_size);
     return true;
   }
 
-  // update edge counters to max count for each edge
+  // Update edge counters using 64-bit comparisons to skip zero chunks
   bool coverage_flag = false;
   int edges_hit = 0;
-  for (size_t i = 0; i < edge_size; i++)
+
+  size_t i = 0;
+  size_t chunks = edge_size / sizeof(uint64_t);
+
+  for (size_t c = 0; c < chunks; c++)
   {
-    if (new_edge_counters[i] > edge_counters[i])
+    uint64_t new_qword, old_qword;
+    memcpy(&new_qword, new_counters + i, sizeof(uint64_t));
+
+    // Fast skip: no edges hit in this 8-byte chunk
+    if (new_qword == 0)
     {
-      edge_counters[i] = new_edge_counters[i];
-      coverage_flag = true;
+      i += 8;
+      continue;
     }
-    if (new_edge_counters[i] > 0)
+
+    memcpy(&old_qword, edge_counters + i, sizeof(uint64_t));
+
+    if (new_qword == old_qword)
     {
-      edges_hit++;
+      // Same coverage, just count edges
+      for (int j = 0; j < 8; j++)
+      {
+        if (new_counters[i + j] > 0)
+          edges_hit++;
+      }
+      i += 8;
+      continue;
+    }
+
+    // Coverage differs, process byte by byte
+    for (int j = 0; j < 8; j++)
+    {
+      if (new_counters[i] > edge_counters[i])
+      {
+        edge_counters[i] = new_counters[i];
+        coverage_flag = true;
+      }
+      if (new_counters[i] > 0)
+        edges_hit++;
+      i++;
     }
   }
+
+  // Handle remaining bytes
+  for (; i < edge_size; i++)
+  {
+    if (new_counters[i] > edge_counters[i])
+    {
+      edge_counters[i] = new_counters[i];
+      coverage_flag = true;
+    }
+    if (new_counters[i] > 0)
+      edges_hit++;
+  }
+
   *hit_count = edges_hit;
   return coverage_flag;
 }
@@ -193,9 +238,8 @@ void save_to_intresting(const uint8_t *input, int seed_num, size_t size)
 
 int run_target(const uint8_t *input, size_t size)
 {
-
-  input_to_file(input_file_path, input, size);
-  unlink(coverage_file_path);
+  // Write input using persistent fd (no open/close overhead)
+  write_input_fast(input, size);
 
   uint32_t go = 0xDEADBEEF;
   if (write(go_pipe[1], &go, 4) != 4)
@@ -345,6 +389,17 @@ int main(void)
   setenv("FUZZER_TMP", tmpdir, 1);
   printf("RAM disk working directory: %s\n", tmpdir);
 
+  // Setup shared memory for coverage (before forkserver so env var is inherited)
+  setup_shared_memory();
+
+  // Open persistent fd for input file (avoids open/close per iteration)
+  input_fd = open(input_file_path, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+  if (input_fd < 0)
+  {
+    perror("open input fd");
+    exit(1);
+  }
+
   // Open log file
   FILE *f = fopen("log.txt", "w");
   if (f == NULL)
@@ -355,8 +410,11 @@ int main(void)
 
   // Initialize randomizer with current time as seed
   srand((unsigned int)time(NULL));
-  time_t start = time(NULL);
-  time_t last_checkpoint = start;
+
+  // Use monotonic clock for accurate sub-second timing
+  struct timespec ts_start, ts_checkpoint;
+  clock_gettime(CLOCK_MONOTONIC, &ts_start);
+  ts_checkpoint = ts_start;
 
   // start forkserver
   start_forkserver(TARGET_NAME);
@@ -386,10 +444,12 @@ int main(void)
     // Print to console every 1k iterations
     if (iterations % 1000 == 0)
     {
-      time_t now = time(NULL);
-      double elapsed = difftime(now, last_checkpoint);
+      struct timespec ts_now;
+      clock_gettime(CLOCK_MONOTONIC, &ts_now);
+      double elapsed = (double)(ts_now.tv_sec - ts_checkpoint.tv_sec) +
+                        (double)(ts_now.tv_nsec - ts_checkpoint.tv_nsec) / 1e9;
       double iters_per_sec = (elapsed > 0) ? 1000.0 / elapsed : 0;
-      last_checkpoint = now;
+      ts_checkpoint = ts_now;
 
       int total_cov = 0;
       int unique_edges = 0;
@@ -397,14 +457,8 @@ int main(void)
       for (size_t i = 0; i < edge_size; i++)
       {
         total_cov += (int)(edge_counters[i]);
-      }
-
-      for (size_t i = 0; i < edge_size; i++)
-      {
         if (edge_counters[i] > 0)
-        {
           unique_edges++;
-        }
       }
 
       printf("Iterations: %d | %.1f iter/s | Seeds: %d | Interesting: %zu | "
@@ -430,20 +484,23 @@ int main(void)
       printf("Crashing input (length %zu):\n", input_size);
       printf("\n");
       printf("Number of tests before crash: %d\n", iterations);
-      time_t end = time(NULL);
 
-      printf("Elapsed time: %.0f seconds\n", difftime(end, start));
+      struct timespec ts_end;
+      clock_gettime(CLOCK_MONOTONIC, &ts_end);
+      double total_elapsed = (double)(ts_end.tv_sec - ts_start.tv_sec) +
+                              (double)(ts_end.tv_nsec - ts_start.tv_nsec) / 1e9;
+
+      printf("Elapsed time: %.1f seconds\n", total_elapsed);
 
       // Write summary to log
       fprintf(f, "Crash detected! Signal: %d\n", WTERMSIG(status));
       fprintf(f, "Crashing input (length %zu):\n", input_size);
       fprintf(f, "\n");
       fprintf(f, "Number of tests before crash: %d\n", iterations);
-      fprintf(f, "Elapsed time: %.0f seconds\n", difftime(end, start));
+      fprintf(f, "Elapsed time: %.1f seconds\n", total_elapsed);
       fclose(f);
 
       // write save crash output
-      input_to_file("crashing_output.pdf", input, input_size);
       input_to_file("crashing_output.pdf", input, input_size);
 
       if (edge_counters != NULL)
@@ -451,6 +508,7 @@ int main(void)
         free(edge_counters);
       }
 
+      close(input_fd);
       return 0; // STOP FUZZER
     }
 
@@ -481,5 +539,6 @@ int main(void)
     free(edge_counters);
   }
 
+  close(input_fd);
   return 0;
 }

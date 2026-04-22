@@ -25,7 +25,7 @@ cmake \
     -DCMAKE_CXX_COMPILER=clang++ \
     -DCMAKE_C_FLAGS="-fsanitize-coverage=inline-8bit-counters" \
     -DCMAKE_CXX_FLAGS="-fsanitize-coverage=inline-8bit-counters" \
-    -DCMAKE_EXE_LINKER_FLAGS="$INSTR_O_PATH -Wl,--wrap=main" \
+    -DCMAKE_EXE_LINKER_FLAGS="$INSTR_O_PATH -Wl,--wrap=main -lrt" \
     ../
 
 make
